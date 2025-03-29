@@ -1,4 +1,6 @@
 from collections import UserDict
+from datetime import datetime
+
 
 class Field:
     def __init__(self, value):
@@ -22,10 +24,26 @@ class Phone(Field):
              raise ValueError("Incorrect phone number format")
         super().__init__(value)
 
+class Birthday(Field):
+    DATE_FORMAT = "%d.%m.%Y"
+    def __init__(self, value = None):
+        if not value:
+            raise ValueError("Date not be empty")
+        
+        try:
+            converted_value = datetime.strptime(value, Birthday.DATE_FORMAT)
+        except ValueError:
+            raise ValueError("Invalid date format. Use DD.MM.YYYY")
+        super().__init__(converted_value)
+        
+    def __str__(self):
+        return self.value.strftime(Birthday.DATE_FORMAT)
+
 class Record:
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
+        self.birthday = None
 
     def add_phone(self, number):
         self.phones.append(Phone(number))
@@ -37,9 +55,15 @@ class Record:
         for phone in self.phones:
             if phone.value == number:
                  return phone
+            
+    def add_birthday(self, birthday):
+        self.birthday = Birthday(birthday)
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name.value}, birthday: {self.birthday}, phones: {'; '.join(p.value for p in self.phones)}"
+    
+    def __repr__(self):
+         return self.__str__()
 
 class AddressBook(UserDict):
     def add_record(self, record):
@@ -58,6 +82,25 @@ class AddressBook(UserDict):
 
 
 # Тестові функції
+def test_birthday_validation():
+    # тестування формату дати дня народження
+    
+    bd01 = Birthday("22.02.2001") # корректний формат
+    #print(bd01)
+    assert str(bd01) == "22.02.2001"
+
+    try:
+        bd_bad01 = Birthday("22 лютого 2001")
+        assert False, "Expected ValueError for incorrect data format"
+    except ValueError:
+        pass # Очікувана помилка, тест проходить
+
+    try:
+        bd_bad02 = Birthday()
+        assert False, "Expected ValueError for incorrect data format"
+    except ValueError:
+        pass # Очікувана помилка, тест проходить
+
 def test_phone_number_validation():
     # Тестування коректних номерів телефону
     try:
@@ -93,7 +136,11 @@ if __name__ == "__main__":
     # ToDo спробувати unittest або pytest для тестування
     print("TEST phone number validation")
     test_phone_number_validation()
-    print("TEST phone number validation PASS")
+    print("PASS - TEST phone number validation")
+
+    print("TEST birthday date validation")
+    test_birthday_validation()
+    print("PASS - TEST birthday date validation")
 
     record01 = Record("Name01")
     #print(record01.name, len(record01.phones))
