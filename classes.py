@@ -63,7 +63,7 @@ class Record:
         return f"Contact name: {self.name.value}, birthday: {self.birthday}, phones: {'; '.join(p.value for p in self.phones)}"
     
     def __repr__(self):
-         return self.__str__()
+         return str(self)
 
 class AddressBook(UserDict):
     def add_record(self, record):
@@ -157,6 +157,9 @@ if __name__ == "__main__":
     record01.add_phone("1234567891")
     record01.add_phone("1234567891")
     assert len(record01.phones) == 3
+
+    record01.add_birthday("25.08.1999")
+    print(record01.__repr__())
 
     record01.del_phone("1234567891")
     assert len(record01.phones) == 1
