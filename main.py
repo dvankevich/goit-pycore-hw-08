@@ -1,35 +1,55 @@
 from classes import Field, Name, Phone, Record, AddressBook
 
+def parse_input(user_input):
+    cmd, *args = user_input.split()
+    cmd = cmd.strip().lower()
+    return cmd, *args
+
+def input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError:
+            return "Argument expected. Use help command for help."
+    return inner
+
 def main():
-# Створення нової адресної книги
     book = AddressBook()
+    print("Welcome to the assistant bot!")
+    while True:
+        user_input = input("Enter a command: ")
+        command, *args = parse_input(user_input)
 
-    # Створення запису для John
-    john_record = Record("John")
-    john_record.add_phone("1234567890")
-    john_record.add_phone("5555555555")
+        if command in ["close", "exit"]:
+            print("Good bye!")
+            break
 
-    # Додавання запису John до адресної книги
-    book.add_record(john_record)
+        elif command == "hello":
+            print("How can I help you?")
 
-    # Створення та додавання нового запису для Jane
-    jane_record = Record("Jane")
-    jane_record.add_phone("9876543210")
-    book.add_record(jane_record)
+        elif command == "add":
+            pass
 
-    # Виведення всіх записів у книзі
-    for name, record in book.data.items():
-        print(record)
+        elif command == "change":
+            pass
 
-    # Знаходження та редагування телефону для John
-    john = book.find("John")
-    john.edit_phone("1234567890", "1112223333")
+        elif command == "phone":
+            pass
 
-    print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
+        elif command == "all":
+            pass
 
-    # Пошук конкретного телефону у записі John
-    found_phone = john.find_phone("5555555555")
-    print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
+        elif command == "add-birthday":
+            pass
 
-    # Видалення запису Jane
-    book.delete("Jane")
+        elif command == "show-birthday":
+            pass
+
+        elif command == "birthdays":
+            pass
+
+        else:
+            print("Invalid command.")
+
+if __name__ == "__main__":
+    main()
