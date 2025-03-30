@@ -57,6 +57,15 @@ class Record:
             if phone.value == number:
                  return phone
             
+    def change_phone(self, number, new_number):
+        phone = self.find_phone(number)
+        if not phone:
+            return f"Phone number {number} not found"
+        index = self.phones.index(phone)
+        self.phones[index] = Phone(new_number)
+        return f"number {number} changed to {new_number}"
+
+            
     def add_birthday(self, birthday):
         self.birthday = Birthday(birthday)
 

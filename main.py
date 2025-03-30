@@ -28,7 +28,7 @@ def add_contact(args, book: AddressBook):
     return message
 
 @input_error
-def show_phones(args, book):
+def show_phones(args, book: AddressBook):
     if len(args) != 1:
         return "You must provide a name."
     name = args[0]
@@ -37,12 +37,40 @@ def show_phones(args, book):
         return f"record with {name} not found"
     return '; '.join(p.value for p in record.phones)
 
+@input_error
+def change_phone(args, book: AddressBook):
+    if len(args) != 3:
+        return "Incorrect number of arguments. Use change [ім'я] [старий телефон] [новий телефон]"
+    name, phone, new_phone = args
+    record = book.find(name)
+    if not record:
+        return f"record with {name} not found"
+    record.change_phone(phone, new_phone)
+    return f"for {name} number {phone} changed to {new_phone}"
 
 
+def debug_add_data(book: AddressBook):
+    r01 = Record("Name01")
+    r01.add_phone("1234567890")
+    r01.add_phone("1234567891")
+    book.add_record(r01)
 
+    r02 = Record("Name02")
+    r02.add_phone("2234567890")
+    book.add_record(r02)
+
+
+def not_implemented(args, command):
+    return f"{command} with {args} not implemented"
 
 def main():
+    DEBUG = True
+
     book = AddressBook()
+
+    if DEBUG:
+        debug_add_data(book)
+
     print("Welcome to the assistant bot!")
     while True:
         user_input = input("Enter a command: ")
@@ -62,7 +90,7 @@ def main():
             print(add_contact(args, book))
 
         elif command == "change":
-            pass
+            print(change_phone(args, book))
 
         elif command == "phone":
             print(show_phones(args, book))
@@ -74,13 +102,13 @@ def main():
                 print(book)
 
         elif command == "add-birthday":
-            pass
+            print(not_implemented(args, command))
 
         elif command == "show-birthday":
-            pass
+            print(not_implemented(args, command))
 
         elif command == "birthdays":
-            pass
+            print(not_implemented(args, command))
 
         else:
             print("Invalid command.")
