@@ -14,6 +14,20 @@ def input_error(func):
             return "Argument expected. Use help command for help."
     return inner
 
+@input_error
+def add_contact(args, book: AddressBook):
+    name, phone, *_ = args
+    record = book.find(name)
+    message = "Contact updated."
+    if record is None:
+        record = Record(name)
+        book.add_record(record)
+        message = "Contact added."
+    if phone:
+        record.add_phone(phone)
+    return message
+
+
 def main():
     book = AddressBook()
     print("Welcome to the assistant bot!")
@@ -32,7 +46,7 @@ def main():
             print("How can I help you?")
 
         elif command == "add":
-            pass
+            print(add_contact(args, book))
 
         elif command == "change":
             pass
@@ -41,7 +55,10 @@ def main():
             pass
 
         elif command == "all":
-            pass
+            if len(book) == 0:
+                print("No contacts")
+            else:
+                print(book)
 
         elif command == "add-birthday":
             pass

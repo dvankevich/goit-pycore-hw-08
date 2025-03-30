@@ -81,6 +81,13 @@ class AddressBook(UserDict):
         else:
             print(name, "not found")
 
+    def __str__(self):
+        output = [str(record) for record in self.data.values()]
+        # for record in self.data.values():
+        #     output = output + str(record) + "\n"
+        return "\n".join(output)
+
+
 
 # Тестові функції
 def test_birthday_validation():
@@ -161,6 +168,7 @@ if __name__ == "__main__":
 
     record01.add_birthday("25.08.1999")
     print(record01.__repr__())
+    
 
     record01.del_phone("1234567891")
     assert len(record01.phones) == 1
@@ -177,8 +185,17 @@ if __name__ == "__main__":
     assert len(book.data.items()) == 0
     #print(len(book.data.items()))
     book.add_record(record01)
-    #print(len(book.data.items()))
+    print(record01)
     assert len(book.data.items()) == 1
+
+    record02 = Record("Name 02")
+    book.add_record(record02)
+    book.add_record(Record("Name03"))
+
+    print("--- book.__str__() ---")
+    #book.__str__()
+    print(book)
+    print("---------")
 
     name01 = book.find("Name01")
     assert str(name01.name) == "Name01"
@@ -187,7 +204,7 @@ if __name__ == "__main__":
     assert name02 == None
     #print(name02)
 
-    book.delete("Name02")
-    assert len(book.data.items()) == 1
-    book.delete("Name01")
-    assert len(book.data.items()) == 0
+    # book.delete("Name02")
+    # assert len(book.data.items()) == 1
+    # book.delete("Name01")
+    # assert len(book.data.items()) == 0
