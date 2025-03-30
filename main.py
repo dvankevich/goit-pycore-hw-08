@@ -52,6 +52,7 @@ def change_phone(args, book: AddressBook):
 def add_birthday(args, book: AddressBook):
     name, birhday, *_ = args
     record = book.find(name)
+    #print(record)
     if not record:
        return f"record with {name} not found"
     try:
@@ -60,28 +61,49 @@ def add_birthday(args, book: AddressBook):
         return "Incorrect data format"
     return f"for {name} birthday {birhday} added"
 
+@input_error
+def show_birthday(args, book: AddressBook):
+    name, *_ = args
+    record = book.find(name)
+    if not record:
+       return f"record with {name} not found"
+    birthday = str(record.birthday)
+    return f"contact {name} was born {birthday}"
+
 
 def debug_add_data(book: AddressBook):
     r01 = Record("Name01")
     r01.add_phone("1234567890")
     r01.add_phone("1234567891")
+    r01.add_birthday("29.01.1999")
     book.add_record(r01)
 
     r02 = Record("Name02")
     r02.add_phone("2234567890")
+    r02.add_birthday("02.04.2001")
     book.add_record(r02)
+
+    r03 = Record("Name03")
+    r03.add_phone("3234567890")
+    r03.add_birthday("04.04.2001")
+    book.add_record(r03)
+
+    r04 = Record("Name04")
+    r04.add_phone("4234567890")
+    r04.add_birthday("04.08.2008")
+    book.add_record(r04)
 
 
 def not_implemented(args, command):
     return f"{command} with {args} not implemented"
 
 def main():
-    DEBUG = True
+    DEBUG = True 
 
     book = AddressBook()
 
     if DEBUG:
-        debug_add_data(book)
+        debug_add_data(book) # generate test data
 
     print("Welcome to the assistant bot!")
     while True:
@@ -117,10 +139,15 @@ def main():
             print(add_birthday(args, book))
 
         elif command == "show-birthday":
-            print(not_implemented(args, command))
+            print(show_birthday(args, book))
 
         elif command == "birthdays":
             print(not_implemented(args, command))
+
+        elif command == "save":
+            print(not_implemented(args, command))
+
+            show_birthday
 
         else:
             print("Invalid command.")
