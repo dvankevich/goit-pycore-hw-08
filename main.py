@@ -27,6 +27,19 @@ def add_contact(args, book: AddressBook):
         record.add_phone(phone)
     return message
 
+@input_error
+def show_phones(args, book):
+    if len(args) != 1:
+        return "You must provide a name."
+    name = args[0]
+    record = book.find(name)
+    if  not record:
+        return f"record with {name} not found"
+    return '; '.join(p.value for p in record.phones)
+
+
+
+
 
 def main():
     book = AddressBook()
@@ -52,7 +65,7 @@ def main():
             pass
 
         elif command == "phone":
-            pass
+            print(show_phones(args, book))
 
         elif command == "all":
             if len(book) == 0:
