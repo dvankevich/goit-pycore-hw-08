@@ -1,4 +1,5 @@
 from classes import Field, Name, Phone, Record, AddressBook
+from print_help import print_help
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -23,6 +24,9 @@ def main():
         if command in ["close", "exit"]:
             print("Good bye!")
             break
+
+        elif command == "help":
+            print(print_help())
 
         elif command == "hello":
             print("How can I help you?")
