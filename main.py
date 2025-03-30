@@ -41,12 +41,24 @@ def show_phones(args, book: AddressBook):
 def change_phone(args, book: AddressBook):
     if len(args) != 3:
         return "Incorrect number of arguments. Use change [ім'я] [старий телефон] [новий телефон]"
-    name, phone, new_phone = args
+    name, phone, new_phone, *_ = args
     record = book.find(name)
     if not record:
         return f"record with {name} not found"
     record.change_phone(phone, new_phone)
     return f"for {name} number {phone} changed to {new_phone}"
+
+@input_error
+def add_birthday(args, book: AddressBook):
+    name, birhday, *_ = args
+    record = book.find(name)
+    if not record:
+       return f"record with {name} not found"
+    try:
+        record.add_birthday(birhday)
+    except ValueError:
+        return "Incorrect data format"
+    return f"for {name} birthday {birhday} added"
 
 
 def debug_add_data(book: AddressBook):
@@ -102,7 +114,7 @@ def main():
                 print(book)
 
         elif command == "add-birthday":
-            print(not_implemented(args, command))
+            print(add_birthday(args, book))
 
         elif command == "show-birthday":
             print(not_implemented(args, command))
