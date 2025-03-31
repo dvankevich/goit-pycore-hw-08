@@ -90,6 +90,25 @@ class AddressBook(UserDict):
         else:
             print(name, "not found")
 
+    def birthdays(self):
+        # використовую функцію get_upcoming_birthdays() без змін
+        # виглядає жахливо, проте не треба змінювати вже протестовану функцію
+        birthdays_list = []
+        for record in self.data.values():
+            if record.birthday != None:
+                # переконвертовую дату у формат, який підходить для функції get_upcoming_birthdays()
+                birthday = datetime.strptime(str(record.birthday), '%d.%m.%Y').strftime('%Y.%m.%d')
+                birthdays_item = {"name": str(record.name), "birthday": birthday}
+                birthdays_list.append(birthdays_item)
+        upcoming_birthdays = get_upcoming_birthdays(birthdays_list)
+        # переконвертовую рядок з датою у наш формат
+        for item in upcoming_birthdays:
+            item["congratulation_date"] = datetime.strptime(str(item["congratulation_date"]), '%Y.%m.%d').strftime('%d.%m.%Y')
+        # формую багаторядковий вивід
+        output = '\n'.join([' '.join([entry['name'], entry['congratulation_date']]) for entry in upcoming_birthdays])
+        return output
+
+
     def __str__(self):
         output = [str(record) for record in self.data.values()]
         # for record in self.data.values():
@@ -197,7 +216,7 @@ if __name__ == "__main__":
     print(record01)
     assert len(book.data.items()) == 1
 
-    record02 = Record("Name 02")
+    record02 = Record("Name02")
     book.add_record(record02)
     book.add_record(Record("Name03"))
 
@@ -209,7 +228,7 @@ if __name__ == "__main__":
     name01 = book.find("Name01")
     assert str(name01.name) == "Name01"
     #print(name01)
-    name02 = book.find("Name02")
+    name02 = book.find("Name002")
     assert name02 == None
     #print(name02)
 
@@ -217,3 +236,25 @@ if __name__ == "__main__":
     # assert len(book.data.items()) == 1
     # book.delete("Name01")
     # assert len(book.data.items()) == 0
+
+    r01 = Record("Name11")
+    r01.add_phone("1234567891")
+    r01.add_birthday("29.01.1999")
+    book.add_record(r01)
+
+    r02 = Record("Name12")
+    r02.add_phone("2234567890")
+    r02.add_birthday("02.04.2001")
+    book.add_record(r02)
+
+    r03 = Record("Name03")
+    r03.add_phone("3234567890")
+    r03.add_birthday("04.04.2001")
+    book.add_record(r03)
+
+    r04 = Record("Name04")
+    r04.add_phone("4234567890")
+    r04.add_birthday("04.08.2008")
+    book.add_record(r04)
+
+    book.birthdays()

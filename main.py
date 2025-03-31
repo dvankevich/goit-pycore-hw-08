@@ -142,7 +142,7 @@ def main():
             print(show_birthday(args, book))
 
         elif command == "birthdays":
-            print(not_implemented(args, command))
+            print(book.birthdays())
 
         elif command == "save":
             print(not_implemented(args, command))
