@@ -1,5 +1,6 @@
 from classes import Field, Name, Phone, Record, AddressBook
 from print_help import print_help
+import pickle
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -97,13 +98,26 @@ def debug_add_data(book: AddressBook):
 def not_implemented(args, command):
     return f"{command} with {args} not implemented"
 
+def save_data(book, filename="addressbook.pkl"):
+    with open(filename, "wb") as f:
+        pickle.dump(book, f)
+
+def load_data(filename="addressbook.pkl"):
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return AddressBook()  # Повернення нової адресної книги, якщо файл не знайдено
+
 def main():
-    DEBUG = True 
+    # DEBUG = True 
 
-    book = AddressBook()
+    # book = AddressBook()
 
-    if DEBUG:
-        debug_add_data(book) # generate test data
+    # if DEBUG:
+    #     debug_add_data(book) # generate test data
+
+    book = load_data()
 
     print("Welcome to the assistant bot!")
     while True:
@@ -111,6 +125,7 @@ def main():
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
+            save_data(book)
             print("Good bye!")
             break
 
